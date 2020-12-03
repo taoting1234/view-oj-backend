@@ -12,6 +12,7 @@ class OJ(Base):
     name = Column(String(100), unique=True)
     url = Column(String(1000))
     status = Column(Integer, nullable=False)
+    contest_valid = Column(Boolean, nullable=False, default=False)
     need_password = Column(Boolean, nullable=False, default=False)
     need_single_thread = Column(Boolean, nullable=False, default=False)
 

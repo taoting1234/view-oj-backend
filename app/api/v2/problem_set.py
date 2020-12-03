@@ -6,7 +6,8 @@ from app.libs.error_code import CreateSuccess, DeleteSuccess, NotFound, Success
 from app.libs.red_print import RedPrint
 from app.models.oj import OJ
 from app.models.problem_set import ProblemSet
-from app.validators.problem_set import (CreateProblemSetForm,
+from app.validators.problem_set import (CreateContestForm,
+                                        CreateProblemSetForm,
                                         ModifyProblemSetForm)
 
 api = RedPrint('problem_set')
@@ -15,6 +16,15 @@ api = RedPrint('problem_set')
 @api.route("/valid_oj", methods=['GET'])
 def get_oj_list():
     oj_list = OJ.search(status=1, page_size=-1)['data']
+    return jsonify({
+        'code': 0,
+        'data': oj_list
+    })
+
+
+@api.route("/valid_contest_oj", methods=['GET'])
+def get_contest_oj_list():
+    oj_list = OJ.search(status=1, contest_valid=1, page_size=-1)['data']
     return jsonify({
         'code': 0,
         'data': oj_list
@@ -45,13 +55,22 @@ def get_problem_set_api(id_):
     })
 
 
-@api.route("", methods=['POST'])
+@api.route("/add_problem_set", methods=['POST'])
 @login_required
 @admin_only
 def create_problem_set_api():
     form = CreateProblemSetForm().validate_for_api().data_
     ProblemSet.create(**form)
     raise CreateSuccess('Problem set has been created')
+
+
+@api.route("/add_contest", methods=['POST'])
+@login_required
+@admin_only
+def create_contest_api():
+    form = CreateContestForm().validate_for_api().data_
+    # todo: create task
+    raise CreateSuccess('Contest will be available soon')
 
 
 @api.route("/<int:id_>", methods=['PUT'])
