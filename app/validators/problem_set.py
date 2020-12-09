@@ -11,6 +11,7 @@ class CreateProblemSetForm(BaseForm):
     name = StringField(validators=[DataRequired(message='Problem set name cannot be empty')])
     problem_list = StringField(validators=[DataRequired(message='Problem list cannot be empty')])
     user_list = StringField(validators=[DataRequired(message='User list cannot be empty')])
+    category_id = IntegerField(validators=[DataRequired(message='category_id cannot be empty')])
 
     def validate_problem_list(self, value):
         try:
@@ -58,6 +59,7 @@ class CreateContestForm(BaseForm):
     contest_oj_id = IntegerField(validators=[DataRequired(message='contest_oj_id cannot be empty')])
     contest_id = StringField(validators=[DataRequired(message='ContestID cannot be empty')])
     user_list = StringField(validators=[DataRequired(message='User list cannot be empty')])
+    category_id = IntegerField(validators=[DataRequired(message='category_id cannot be empty')])
 
     def validate_contest_oj_id(self, value):
         from app.models.oj import OJ

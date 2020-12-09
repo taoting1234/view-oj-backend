@@ -9,8 +9,9 @@ from app.models.problem_set import ProblemSet
 from app.validators.problem_set import (CreateContestForm,
                                         CreateProblemSetForm,
                                         ModifyProblemSetForm)
+from app.models.problem_set.category import Category
 
-api = RedPrint('problem_set')
+api = RedPrint('monitor')
 
 
 @api.route("/valid_oj", methods=['GET'])
@@ -33,7 +34,16 @@ def get_contest_oj_list():
 
 @api.route("/summary", methods=['GET'])
 def get_summary():
-    problem_set_list = ProblemSet.search(page_size=-1, order={'id': 'desc'})['data']
+    collection_list = Category.search(page_size=-1, order={'id': 'desc'})['data']
+    return jsonify({
+        'code': 0,
+        'data': collection_list
+    })
+
+
+@api.route('/Category/<int:id_>', methods=['GET'])
+def get_collection(id_):
+    problem_set_list = ProblemSet.search(category_id=id_, page_size=-1, order={'id': 'desc'})['data']
     return jsonify({
         'code': 0,
         'data': problem_set_list
@@ -69,6 +79,7 @@ def create_problem_set_api():
 @admin_only
 def create_contest_api():
     form = CreateContestForm().validate_for_api().data_
+    ProblemSet.create(**form)
     # todo: create task
     raise CreateSuccess('Contest will be available soon')
 

@@ -15,6 +15,10 @@ def register_blueprints(flask_app):
 
 
 def register_plugin(flask_app):
+    # 创建数据表
+    from app.models.problem_set.user_relationship import UserRelationship
+    from app.models.problem_set.problem_relationship import ProblemRelationship
+
     # 注册sqlalchemy
 
     db.init_app(flask_app)

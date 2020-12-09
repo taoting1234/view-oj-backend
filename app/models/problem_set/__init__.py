@@ -1,15 +1,17 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String
 
 from app.models.base import Base
+from app.models.problem_set.series import Series
 
 
 class ProblemSet(Base):
     __tablename__ = 'problem_set'
 
-    fields = ['id', 'name']
+    fields = ['id', 'name', 'series_id']
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(100))
+    series_id = Column(Integer, ForeignKey(Series.id))
 
     @property
     def problem_list(self):
@@ -60,7 +62,7 @@ class ProblemSet(Base):
         from app.models.problem_set.problem_relationship import ProblemRelationship
         from app.models.problem_set.user_relationship import UserRelationship
         problem_set = super().create(**kwargs)
-        for i in kwargs['problem_list']:
+        for i in kwargs.get('problem_list', []):
             oj_name, problem_pid = i['problem'].split('-', 1)
             oj = OJ.get_by_name(oj_name)
             problem = Problem.get_by_oj_id_and_problem_pid(oj.id, problem_pid)
